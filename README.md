@@ -31,6 +31,11 @@ python main.py -a AUDIO_FILE
 forces the cpu to be used even if cuda is available
 
 ```bash
+-hf or --huggingface
+```
+provide access token in cli instead of from loading from .env
+
+```bash
 -b N or --batch N
 ```
 -b N sets batch size, decrease if low on mem, defaults to 16
