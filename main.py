@@ -46,7 +46,7 @@ if language not in accepted_languages:
 
 device, compute_type = ("cuda", "float16") if torch.cuda.is_available() and not forced_cpu else ("cpu", "int8")
 
-model = whisperx.load_model(model, device, compute_type=compute_type)
+model = whisperx.load_model(model, device, compute_type=compute_type, language=language)
 
 audio = whisperx.load_audio(audio_file)
 if language == None:
