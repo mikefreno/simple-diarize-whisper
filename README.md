@@ -2,7 +2,7 @@
 
 This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file.
 
-## Step 1: Clone
+## Step 1: Clone this repo
 ```bash
 git clone https://github.com/mikefreno/my-whisper.git
 ```
