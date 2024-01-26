@@ -17,7 +17,8 @@ parser = argparse.ArgumentParser(description="A script that transcribes audio")
 
 parser.add_argument("-a", "--audio", help="'-a AUDIO_FILE' to denote file for transcription", required=True)
 parser.add_argument("-fc", "--force-cpu", action="store_true", help="-fc or --force-cpu to use cpu even if cuda is available")
-parser.add_argument("-b", "--batch", type=int, default=16, help="-b N sets batch size, decrease if low on mem, defaults to 16")
+parser.add_argument("-b", "--batch", type=int, default=8, help="-b N sets batch size, decrease if low on mem, defaults to 8, increase if you have spare mem available")
+parser.add_argument("-n", "--number", type=int, default=None, help="-n or --number N if exact speaker count number is known")
 parser.add_argument("--min", type=int, default=None, help="--min N if speakers known in range, must use with --max flag")
 parser.add_argument("--max", type=int, default=None, help="--max N if speakers known in range, must use with --min flag")
 parser.add_argument("-m", "--model", default="large-v2", help="-m or --model to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']")
@@ -31,6 +32,7 @@ accepted_models = ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']
 audio_file = args.audio
 defined_min_speakers = args.min
 defined_max_speakers = args.max
+exact_speaker_count = args.number
 forced_cpu = args.force_cpu
 batch_size = args.batch
 language = args.language
@@ -95,7 +97,9 @@ start_diarize = time.time()
 print("------diarizing------")
 diarize_model = whisperx.DiarizationPipeline(use_auth_token=access_token, device=device)
 
-if defined_min_speakers and defined_max_speakers:
+if exact_speaker_count:
+    diarize_segments = diarize_model(audio_file, num_speakers=exact_speaker_count)
+elif defined_min_speakers and defined_max_speakers:
     diarize_segments = diarize_model(audio_file, min_speakers=defined_min_speakers, max_speakers=defined_max_speakers)
 else:
     diarize_segments = diarize_model(audio_file)

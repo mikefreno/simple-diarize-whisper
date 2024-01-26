@@ -29,12 +29,13 @@ Take token and add to the .env file `diarize_token={token}`
 
 ## How to use
 
-### The most basic use is the following 
+### The most basic use is the following -a is required flag
 ```python
 python main.py -a AUDIO_FILE
 ```
 
-### Optional flags
+## Optional flags
+
 ```bash
 -fc or --force-cpu
 ```
@@ -48,7 +49,13 @@ provide access token in cli instead of from loading from .env
 ```bash
 -b N or --batch N
 ```
--b N sets batch size, decrease if low on mem, defaults to 16
+-b N sets batch size, decrease if low on mem, defaults to 8 - only affects performance
+
+### the following speaker count indicators can improve accuracy
+```bash
+-n or --number N
+```
+if exact speaker count number is known
 
 ```bash
 --min N
@@ -63,9 +70,10 @@ if speakers known in range, must use with --min flag can increase accuracy
 ```bash
 -m or --model
 ```
-to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']
+to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2'] - affects performance and accuracy
 
 ```bash
 -l or --language
 ```
 specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt], skips detection step 
+
