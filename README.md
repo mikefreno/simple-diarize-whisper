@@ -1,6 +1,6 @@
 # Project Setup Guide
 
-This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file.
+This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file. Recommend python 3.10
 
 ## Step 1: Clone this repo
 ```bash
