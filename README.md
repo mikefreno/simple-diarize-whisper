@@ -1,6 +1,6 @@
-# Setup and Use Guide
+# Project Setup Guide
 
-This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file. Recommend python 3.10
+This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file.
 
 ## Step 1: Clone this repo
 ```bash
@@ -15,6 +15,7 @@ Install PyTorch by following the instructions on the official website [here](htt
 ```bash
 pip install git+https://github.com/m-bain/whisperx.git
 ```
+
 ## Step 4: Install other requirements
 ```bash
 pip install -r requirements.txt
