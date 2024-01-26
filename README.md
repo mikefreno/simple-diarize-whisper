@@ -15,8 +15,12 @@ Install PyTorch by following the instructions on the official website [here](htt
 ```bash
 pip install git+https://github.com/m-bain/whisperx.git
 ```
+## Step 4: Install other requirements
+```bash
+pip install -r requirements.txt
+```
 
-## Step 4: Accept Hugging Face User Agreements & Get Access Token
+## Step 5: Accept Hugging Face User Agreements & Get Access Token
 
 Accept user agreements for both pyannote/segmentation-3.0 [here](https://huggingface.co/pyannote/segmentation-3.0) and pyannote/speaker-diarization-3.1 [here](https://huggingface.co/pyannote/speaker-diarization-3.1). Then, get the access token from Hugging Face from [here](https://huggingface.co/settings/tokens). The token should have the 'read' role.
 
