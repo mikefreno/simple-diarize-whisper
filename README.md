@@ -1,6 +1,6 @@
 # Project Setup Guide
 
-This project requires the setup of deep learning libraries PyTorch and whisperX, which are used for computations and processing of the models. Additionally, this project requires accepting user agreements and getting access tokens from Hugging Face for pyannote's segmentation and speaker diarization models.
+This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file.
 
 ## Step 1: Install PyTorch
 
@@ -11,10 +11,46 @@ Install PyTorch by following the instructions on the official website [here](htt
 pip install git+https://github.com/m-bain/whisperx.git
 ```
 
-Step 3: Accept Hugging Face User Agreements & Get Access Token
+## Step 3: Accept Hugging Face User Agreements & Get Access Token
 
 Accept user agreements for both pyannote/segmentation-3.0 [here](https://huggingface.co/pyannote/segmentation-3.0) and pyannote/speaker-diarization-3.1 [here](https://huggingface.co/pyannote/speaker-diarization-3.1). Then, get the access token from Hugging Face from [here](https://huggingface.co/settings/tokens). The token should have the 'read' role.
 
-Take token and add to .env file `diarize_token={token}`
+Take token and add to the .env file `diarize_token={token}`
 
-After these steps are completed, you are ready to use the project code.
+## How to use
+
+### The most basic use is the following 
+```python
+python main.py -a AUDIO_FILE
+```
+
+### Optional flags
+```bash
+-fc or --force-cpu
+```
+forces the cpu to be used even if cuda is available
+
+```bash
+-b N or --batch N
+```
+-b N sets batch size, decrease if low on mem, defaults to 16
+
+```bash
+--min N
+```
+if speakers known in range, must use with --max flag can increase accuracy
+
+```bash
+--max N
+```
+if speakers known in range, must use with --min flag can increase accuracy
+
+```bash
+-m or --model
+```
+to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']
+
+```bash
+-l or --language
+```
+specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt], skips detection step 

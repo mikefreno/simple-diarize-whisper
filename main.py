@@ -17,8 +17,9 @@ parser.add_argument("-fc", "--force-cpu", action="store_true", help="-fc or --fo
 parser.add_argument("-b", "--batch", type=int, default=16, help="-b N sets batch size, decrease if low on mem, defaults to 16")
 parser.add_argument("--min", type=int, default=None, help="--min N if speakers known in range, must use with --max flag")
 parser.add_argument("--max", type=int, default=None, help="--max N if speakers known in range, must use with --min flag")
-parser.add_argument("-m", "--model", default="large-v2", help="-m or --model to use a model other than large-v2, accepted vals")
+parser.add_argument("-m", "--model", default="large-v2", help="-m or --model to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']")
 parser.add_argument("-l", "--language", default=None, help="-l or --language to specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt]")
+parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --huggingface to provide access token instead of from loading from .env")
 
 args = parser.parse_args()
 accepted_languages = ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt', None]
@@ -31,6 +32,11 @@ forced_cpu = args.force_cpu
 batch_size = args.batch
 language = args.language
 model = args.model
+
+if args.huggingface == None:
+    access_token = os.getenv("diarize_token")
+else:
+    access_token = args.huggingface
 
 if model not in accepted_models:
     sys.exit("")
@@ -60,7 +66,6 @@ result = whisperx.align(result["segments"], model_a, metadata, audio, device, re
 # delete model if low on GPU resources
 # import gc; gc.collect(); torch.cuda.empty_cache(); del model_a
 
-access_token = os.getenv("diarize_token")
 diarize_model = whisperx.DiarizationPipeline(use_auth_token=access_token, device=device)
 
 if defined_min_speakers and defined_max_speakers:
