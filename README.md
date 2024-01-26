@@ -1,4 +1,4 @@
-# Project Setup Guide
+# Setup and Use Guide
 
 This project is a quick start for whisperX, it includes multiple cli flags and outputs a formatted result to a text file.
 
