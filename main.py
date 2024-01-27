@@ -139,7 +139,7 @@ with open('diarized_output.txt', 'w') as file:
             end = timedelta(seconds=int(segment['end']))
         text = segment['text']
         # Write to the file in your specified format
-        if noTime != None:
+        if noTime == None:
             file.write(f'[{start}-{end}] {speaker} -> {text}\n')
         else:
             file.write(f'{speaker} -> {text}\n')
@@ -147,7 +147,7 @@ with open('diarized_output.txt', 'w') as file:
 with open('base_output.txt', 'w') as file:
     for segment in result["segments"]:
         text = segment['text']
-        file.write(text)
+        file.write(f"{text}\n")
 
 end_writing_time = time.time()
 print("--------end print--------")
