@@ -29,6 +29,8 @@ Take token and add to the .env file `diarize_token={token}`
 
 ## How to use
 
+Note: Two files are created, diarized_output.txt with speaker notes and base_output with base transcription
+
 ### The most basic use is the following -a is required flag
 ```python
 python main.py -a AUDIO_FILE
@@ -68,6 +70,16 @@ if speakers known in range, must use with --max flag can increase accuracy
 if speakers known in range, must use with --min flag can increase accuracy
 
 ```bash
+-t or --time
+```
+specifies a time to use as the start time
+
+```bash
+-nt or --notime
+```
+removes time stamps
+
+```bash
 -m or --model
 ```
 to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2'] - affects performance and accuracy
@@ -76,4 +88,3 @@ to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'med
 -l or --language
 ```
 specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt], skips detection step 
-

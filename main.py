@@ -17,13 +17,15 @@ parser = argparse.ArgumentParser(description="A script that transcribes audio")
 
 parser.add_argument("-a", "--audio", help="'-a AUDIO_FILE' to denote file for transcription", required=True)
 parser.add_argument("-fc", "--force-cpu", action="store_true", help="-fc or --force-cpu to use cpu even if cuda is available")
-parser.add_argument("-b", "--batch", type=int, default=8, help="-b N sets batch size, decrease if low on mem, defaults to 8, increase if you have spare mem available")
+parser.add_argument("-b", "--batch", type=int, default=16, help="-b N sets batch size, decrease if low on mem, defaults to 16, increase if you have spare mem available")
 parser.add_argument("-n", "--number", type=int, default=None, help="-n or --number N if exact speaker count number is known")
 parser.add_argument("--min", type=int, default=None, help="--min N if speakers known in range, must use with --max flag")
 parser.add_argument("--max", type=int, default=None, help="--max N if speakers known in range, must use with --min flag")
 parser.add_argument("-m", "--model", default="large-v2", help="-m or --model to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']")
 parser.add_argument("-l", "--language", default=None, help="-l or --language to specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt]")
 parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --huggingface to provide access token instead of from loading from .env")
+parser.add_argument("-t", "--time", default=None, help="provides a start time to base time stamps on, accepts 24hr times in format 20:10")
+parser.add_argument("-nt", "--notime", action="store_true", default=None, help="removes timestamps")
 
 args = parser.parse_args()
 accepted_languages = ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt', None]
@@ -37,6 +39,15 @@ forced_cpu = args.force_cpu
 batch_size = args.batch
 language = args.language
 model = args.model
+timeInput =args.time
+noTime = args.notime
+
+hours = None
+minutes = None
+if timeInput:
+    split = timeInput.split(":")
+    hours = split[0] 
+    minutes = split[1]
 
 if args.huggingface == None:
     access_token = os.getenv("diarize_token")
@@ -113,16 +124,30 @@ start_writing_time = time.time()
 print("--------writing alignment--------")
 result = whisperx.assign_word_speakers(diarize_segments, result)
 
-with open('output.txt', 'w') as file:
+offset_seconds = None
+if hours is not None and minutes is not None:
+    offset_seconds = timedelta(hours=int(hours), minutes=int(minutes)).total_seconds()
+with open('diarized_output.txt', 'w') as file:
     for segment in result["segments"]:
         # Extract the speaker, start time, end time and text from each segment
         speaker = segment['speaker']
-        start = timedelta(seconds=int(segment['start']))
-        end = timedelta(seconds=int(segment['end']))
+        if offset_seconds != None:
+            start = timedelta(seconds=int(segment['start']) + offset_seconds)
+            end = timedelta(seconds=int(segment['end']) + offset_seconds)
+        else:
+            start = timedelta(seconds=int(segment['start']))
+            end = timedelta(seconds=int(segment['end']))
         text = segment['text']
         # Write to the file in your specified format
-        file.write(f'[{start}-{end}] {speaker} -> {text}\n')
+        if noTime != None:
+            file.write(f'[{start}-{end}] {speaker} -> {text}\n')
+        else:
+            file.write(f'{speaker} -> {text}\n')
 
+with open('base_output.txt', 'w') as file:
+    for segment in result["segments"]:
+        text = segment['text']
+        file.write(text)
 
 end_writing_time = time.time()
 print("--------end print--------")
@@ -131,8 +156,8 @@ print("Total process time: %.2f seconds" % (end_writing_time- start_time))
 
 
 if platform.system() == 'Windows':
-    os.startfile('output.txt')
+    os.startfile('diarized_output.txt')
 elif platform.system() == "Darwin":
-    subprocess.call(('open', 'output.txt'))
+    subprocess.call(('open', 'diarized_output.txt'))
 elif platform.system() == "Linux":
-    subprocess.call(('xdg-open', 'output.txt'))
+    subprocess.call(('xdg-open', 'diarized_output.txt'))
