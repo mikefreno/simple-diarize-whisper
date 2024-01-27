@@ -9,7 +9,7 @@ git clone https://github.com/mikefreno/my-whisper.git
 
 ## Step 2: Install PyTorch
 
-Install PyTorch by following the instructions on the official website [here](https://pytorch.org/get-started/locally/). Make sure to use the CUDA 11.8 version if you want to use CUDA.
+Install PyTorch by following the instructions on the official website [here](https://pytorch.org/get-started/locally/). **Make sure to use the CUDA 11.8 version if you want to use CUDA.**
 
 ## Step 3: Install whisperX
 ```bash
