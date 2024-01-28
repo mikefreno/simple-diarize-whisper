@@ -21,7 +21,7 @@ pip install git+https://github.com/m-bain/whisperx.git
 pip install -r requirements.txt
 ```
 
-## Step 5(optional): Replace faster_whisper utils.py (gives support for distil models)
+## Step 5 (optional): Replace faster_whisper utils.py (gives support for distil models)
 ### unix
 ```bash
 cp utils.py /YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/utils.py
