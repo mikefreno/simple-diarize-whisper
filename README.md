@@ -52,7 +52,7 @@ python main.py -a AUDIO_FILE
 | --- | --- |
 | `-fc`, `--force-cpu` | Forces the CPU to be used even if CUDA is available |
 | `-hf`, `--huggingface` | Provide access token in CLI instead of loading from `.env` |
-| `-b N`, `--batch N` | Sets batch size to `N`. Decrease if low on memory, defaults to 8. Only affects performance |
+| `-b N`, `--batch N` | Sets batch size to `N`. Decrease if low on memory, defaults to 16. Only affects performance |
 | `-lg`, `--low-gpu` | Recovers GPU resources; use if you have low GPU resources |
 | `-n`, `--number N` | Use if exact speaker count (`N`) is known |
 | `--min N`,`--max N` | If speakers are known to be within a range, these flags can help increase accuracy. Both should be used together. |
