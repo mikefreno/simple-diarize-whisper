@@ -47,64 +47,17 @@ Note: Two files are created, diarized_output.txt with speaker notes and base_out
 python main.py -a AUDIO_FILE
 ```
 
-## Optional flags
 
-```bash
--fc or --force-cpu
-```
-forces the cpu to be used even if cuda is available
-
-```bash
--hf or --huggingface
-```
-provide access token in cli instead of from loading from .env
-
-```bash
--b N or --batch N
-```
--b N sets batch size, decrease if low on mem, defaults to 8 - only affects performance
-
-```bash
--lg or --low-gpu
-```
-recovers gpu resources, use if you have low gpu resources
-
-### the following speaker count indicators can improve accuracy
-```bash
--n or --number N
-```
-if exact speaker count number is known
-
-```bash
---min N
-```
-if speakers known in range, must use with --max flag can increase accuracy
-
-```bash
---max N
-```
-if speakers known in range, must use with --min flag can increase accuracy
-
-```bash
--t or --time
-```
-specifies a time to use as the start time
-```bash
--anl or --aggressive-new-line
-```
-puts new lines(breaks) at each same speaker chunk instead of spaces
-
-```bash
--nt or --notime
-```
-removes time stamps
-
-```bash
--m or --model
-```
-to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2'] - affects performance and accuracy
-
-```bash
--l or --language
-```
-specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt], skips detection step 
+| Flag | Description |
+| --- | --- |
+| `-fc`, `--force-cpu` | Forces the CPU to be used even if CUDA is available |
+| `-hf`, `--huggingface` | Provide access token in CLI instead of loading from `.env` |
+| `-b N`, `--batch N` | Sets batch size to `N`. Decrease if low on memory, defaults to 8. Only affects performance |
+| `-lg`, `--low-gpu` | Recovers GPU resources; use if you have low GPU resources |
+| `-n`, `--number N` | Use if exact speaker count (`N`) is known |
+| `--min N`,`--max N` | If speakers are known to be within a range, these flags can help increase accuracy. Both should be used together. |
+| `-t`, `--time` | Specifies a time to use as the start time |
+| `-anl`, `--aggressive-new-line` | Puts new lines (breaks) at each same speaker chunk instead of spaces |
+| `-nt`, `--notime` | Removes timestamps |
+| `-m`, `--model` | To use a model other than `large-v2`. Accepted values: `['tiny', 'base', 'small', 'medium', 'large', 'large-v2']`. Affects performance and accuracy |
+| `-l`, `--language` | Specify language to skip detection in file. Accepted values: `[en, fr, de, es, it, ja, zh nl, ul, pt]`. Skips detection step |
