@@ -21,7 +21,7 @@ pip install git+https://github.com/m-bain/whisperx.git
 pip install -r requirements.txt
 ```
 
-## Step 5 (optional): Replace faster_whisper utils.py (gives support for distil models)
+## Step 5 (optional): Replace faster_whisper utils.py (gives support for distil models -these are faster, highly recommend if running on cpu)
 ### unix
 ```bash
 cp utils.py /YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/utils.py
@@ -36,7 +36,7 @@ copy utils.py \path\to\project_dir\YOUR_VENV_NAME\Lib\site-packages\faster_whisp
 
 Accept user agreements for both pyannote/segmentation-3.0 [here](https://huggingface.co/pyannote/segmentation-3.0) and pyannote/speaker-diarization-3.1 [here](https://huggingface.co/pyannote/speaker-diarization-3.1). Then, get the access token from Hugging Face from [here](https://huggingface.co/settings/tokens). The token should have the 'read' role.
 
-Take token and add to the .env file `diarize_token={token}`
+Take token and add to a .env file `diarize_token=your_hf_token`
 
 ## How to use
 
@@ -48,16 +48,16 @@ python main.py -a AUDIO_FILE
 ```
 
 ### Optional flags
-| Flag | Description |
-| --- | --- |
-| `-fc`, `--force-cpu` | Forces the CPU to be used even if CUDA is available |
-| `-hf`, `--huggingface` | Provide access token in CLI instead of loading from `.env` |
-| `-b N`, `--batch N` | Sets batch size to `N`. Decrease if low on memory, defaults to 16. Only affects performance |
-| `-lg`, `--low-gpu` | Recovers GPU resources; use if you have low GPU resources |
-| `-n`, `--number N` | Use if exact speaker count (`N`) is known |
-| `--min N`,`--max N` | If speakers are known to be within a range, these flags can help increase accuracy. Both should be used together. |
-| `-t`, `--time` | Specifies a time to use as the start time |
-| `-anl`, `--aggressive-new-line` | Puts new lines (breaks) at each same speaker chunk instead of spaces |
-| `-nt`, `--notime` | Removes timestamps |
-| `-m`, `--model` | To use a model other than `large-v2`. Accepted values: `['tiny', 'base', 'small', 'small.en', 'medium', 'medium.en' 'large', 'large-v1', 'large-v2', 'large-v3', 'distil-medium.en', 'distil-small.en', 'distil-large-v2']`. Affects performance and accuracy |
-| `-l`, `--language` | Specify language to skip detection in file. Accepted values: `[en, fr, de, es, it, ja, zh nl, ul, pt]`. Skips detection step |
+| Flag | Short | Description |
+| --- | --- | --- |
+| --force-cpu | -fc | Forces CPU usage, even if CUDA is available |
+| --huggingface | -hf | Provide access token from CLI instead of `.env` |
+| --batch | -b N | Sets batch size (N), can improve performance |
+| --low-gpu | -lg | Recovers GPU resources |
+| --number | -n N | For known exact speaker count (N) |
+| --min/--max | -mn N / -mx N | For known speaker count range, use both flags |
+| --time | -t | Specifies a start time |
+| --aggressive-new-line | -anl | New lines at each same speaker chunk |
+| --notime | -nt | Removes timestamps |
+| --model | -m | Specify model, affects performance & accuracy |
+| --language | -l | Specify language, skips detection step |
