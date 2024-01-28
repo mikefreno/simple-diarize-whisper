@@ -1,7 +1,7 @@
 # Setup and Use Guide
 
 This project is a quick start cli application for whisperX, it includes multiple flags and outputs a formatted result to a text file.
-
+### Python3.10 is recommended
 ## Step 1: Clone this repo
 ```bash
 git clone https://github.com/mikefreno/my-whisper.git
