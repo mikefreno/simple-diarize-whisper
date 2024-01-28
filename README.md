@@ -29,7 +29,7 @@ cp utils.py /YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/util
 
 ### windows
 ```bash
-copy utils.py \YOUR_VENV_NAME\Lib\site-packages\faster_whisper\utils.py
+copy utils.py \path\to\project_dir\YOUR_VENV_NAME\Lib\site-packages\faster_whisper\utils.py
 ```
 
 ## Step 6: Accept Hugging Face User Agreements & Get Access Token
