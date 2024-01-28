@@ -89,6 +89,10 @@ if speakers known in range, must use with --min flag can increase accuracy
 -t or --time
 ```
 specifies a time to use as the start time
+```bash
+-anl or --aggressive-new-line
+```
+puts new lines(breaks) at each same speaker chunk instead of spaces
 
 ```bash
 -nt or --notime

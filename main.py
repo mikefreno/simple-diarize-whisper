@@ -30,6 +30,7 @@ parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --hugging
 parser.add_argument("-t", "--time", default=None, help="provides a start time to base time stamps on, accepts 24hr times in format 20:10")
 parser.add_argument("-nt", "--notime", action="store_true", default=None, help="removes timestamps")
 parser.add_argument("-lg", "--low-gpu", action="store_true", default=None, help="recovers gpu resources, use if you have low gpu resources")
+parser.add_argument("-anl", "--aggressive-new-line", action="store_true", default=None, help="puts new lines(breaks) at each same speaker chunk instead of spaces")
 
 args = parser.parse_args()
 
@@ -44,6 +45,7 @@ model = args.model
 timeInput =args.time
 noTime = args.notime
 lowGPU = args.low_gpu
+aggressive_new_line = args.aggressive_new_line
 
 hours = None
 minutes = None
@@ -61,7 +63,7 @@ if model not in accepted_models:
     sys.exit(f"Invalid model. Accepted values are {accepted_models}")
 
 if language not in accepted_languages:
-    sys.exit("Invalid language. Accepted values are ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt']")
+    sys.exit(f"Invalid language. Accepted values are {accepted_languages}")
 
 device, compute_type = ("cuda", "float16") if torch.cuda.is_available() and not forced_cpu else ("cpu", "int8")
 
@@ -91,10 +93,11 @@ end_transcribe_load = time.time()
 print("Time taken for transcribing: %.2f seconds" % (end_transcribe_load- start_transcribe_load))
 
 
-# delete model if low on GPU resources
-# import gc; gc.collect(); torch.cuda.empty_cache(); del model
+if lowGPU != None:
+    gc.collect()
+    torch.cuda.empty_cache()
+    del model
 
-# 2. Align whisper output
 print("------aligning whisper------")
 start_alignment_load = time.time()
 model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
@@ -103,7 +106,6 @@ result = whisperx.align(result["segments"], model_a, metadata, audio, device, re
 end_alignment_load = time.time()
 print("Time taken for alignment: %.2f seconds" % (end_alignment_load- start_alignment_load))
 
-#print(result["segments"]) # after alignment
 
 if lowGPU != None:
     gc.collect(); 
@@ -160,7 +162,6 @@ with open('diarized_output.txt', 'w') as file:
         else:
             running_string += "\n" + text.strip()
             last_end = end
-
 
     file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
 
