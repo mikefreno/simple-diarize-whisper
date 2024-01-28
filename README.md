@@ -47,7 +47,7 @@ Note: Two files are created, diarized_output.txt with speaker notes and base_out
 python main.py -a AUDIO_FILE
 ```
 
-
+### Optional flags
 | Flag | Description |
 | --- | --- |
 | `-fc`, `--force-cpu` | Forces the CPU to be used even if CUDA is available |
