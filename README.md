@@ -59,5 +59,5 @@ python main.py -a AUDIO_FILE
 | `-t`, `--time` | Specifies a time to use as the start time |
 | `-anl`, `--aggressive-new-line` | Puts new lines (breaks) at each same speaker chunk instead of spaces |
 | `-nt`, `--notime` | Removes timestamps |
-| `-m`, `--model` | To use a model other than `large-v2`. Accepted values: `['tiny', 'base', 'small', 'medium', 'large', 'large-v2']`. Affects performance and accuracy |
+| `-m`, `--model` | To use a model other than `large-v2`. Accepted values: `['tiny', 'base', 'small', 'small.en', 'medium', 'medium.en' 'large', 'large-v1', 'large-v2', 'large-v3', 'distil-medium.en', 'distil-small.en', 'distil-large-v2']`. Affects performance and accuracy |
 | `-l`, `--language` | Specify language to skip detection in file. Accepted values: `[en, fr, de, es, it, ja, zh nl, ul, pt]`. Skips detection step |
