@@ -64,6 +64,11 @@ provide access token in cli instead of from loading from .env
 ```
 -b N sets batch size, decrease if low on mem, defaults to 8 - only affects performance
 
+```bash
+-lg or --low-gpu
+```
+recovers gpu resources, use if you have low gpu resources
+
 ### the following speaker count indicators can improve accuracy
 ```bash
 -n or --number N

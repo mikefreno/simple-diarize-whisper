@@ -29,6 +29,7 @@ parser.add_argument("-l", "--language", default=None, help=f"-l or --language to
 parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --huggingface to provide access token instead of from loading from .env")
 parser.add_argument("-t", "--time", default=None, help="provides a start time to base time stamps on, accepts 24hr times in format 20:10")
 parser.add_argument("-nt", "--notime", action="store_true", default=None, help="removes timestamps")
+parser.add_argument("-lg", "--low-gpu", action="store_true", default=None, help="recovers gpu resources, use if you have low gpu resources")
 
 args = parser.parse_args()
 
@@ -42,6 +43,7 @@ language = args.language
 model = args.model
 timeInput =args.time
 noTime = args.notime
+lowGPU = args.low_gpu
 
 hours = None
 minutes = None
@@ -103,8 +105,11 @@ print("Time taken for alignment: %.2f seconds" % (end_alignment_load- start_alig
 
 #print(result["segments"]) # after alignment
 
-# delete model if low on GPU resources
-# import gc; gc.collect(); torch.cuda.empty_cache(); del model_a
+if lowGPU != None:
+    gc.collect(); 
+    torch.cuda.empty_cache(); 
+    del model_a
+
 start_diarize = time.time()
 print("------diarizing------")
 diarize_model = whisperx.DiarizationPipeline(use_auth_token=access_token, device=device)
@@ -116,9 +121,9 @@ elif defined_min_speakers and defined_max_speakers:
 else:
     diarize_segments = diarize_model(audio_file)
 
-print("--------end diarize--------")
 end_diarize_time = time.time()
 print("Time taken for diarization: %.2f seconds" % (end_diarize_time - start_diarize))
+print("--------end diarize--------")
 
 
 start_writing_time = time.time()
@@ -153,7 +158,7 @@ with open('diarized_output.txt', 'w') as file:
             running_string = text
             current_speaker = segment.get('speaker')
         else:
-            running_string += "\n" + text
+            running_string += "\n" + text.strip()
             last_end = end
 
 
@@ -171,8 +176,8 @@ with open('base_output.txt', 'w') as file:
             current_speaker = segment.get('speaker')
 
 end_writing_time = time.time()
-print("--------end print--------")
 print("Time taken for alignment: %.2f seconds" % (end_writing_time- start_writing_time))
+print("--------end print--------")
 print("Total process time: %.2f seconds" % (end_writing_time- start_time))
 
 
