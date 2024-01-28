@@ -1,5 +1,5 @@
 .env
-/venv
+.venv
 /.idea
 base_output.txt
 diarized_output.txt

@@ -21,7 +21,18 @@ pip install git+https://github.com/m-bain/whisperx.git
 pip install -r requirements.txt
 ```
 
-## Step 5: Accept Hugging Face User Agreements & Get Access Token
+## Step 5(optional): Replace faster_whisper utils.py (gives support for distil models)
+### unix
+```bash
+cp utils.py /YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/utils.py
+```
+
+### windows
+```bash
+copy utils.py \YOUR_VENV_NAME\Lib\site-packages\faster_whisper\utils.py
+```
+
+## Step 6: Accept Hugging Face User Agreements & Get Access Token
 
 Accept user agreements for both pyannote/segmentation-3.0 [here](https://huggingface.co/pyannote/segmentation-3.0) and pyannote/speaker-diarization-3.1 [here](https://huggingface.co/pyannote/speaker-diarization-3.1). Then, get the access token from Hugging Face from [here](https://huggingface.co/settings/tokens). The token should have the 'read' role.
 
