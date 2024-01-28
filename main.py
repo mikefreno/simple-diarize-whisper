@@ -26,6 +26,7 @@ parser.add_argument("-l", "--language", default=None, help="-l or --language to 
 parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --huggingface to provide access token instead of from loading from .env")
 parser.add_argument("-t", "--time", default=None, help="provides a start time to base time stamps on, accepts 24hr times in format 20:10")
 parser.add_argument("-nt", "--notime", action="store_true", default=None, help="removes timestamps")
+parser.add_argument("-cs", "--chunk-secondary", action="store_true", default=None, help="chunks the secondary(base) output into blocks per speaker")
 
 args = parser.parse_args()
 accepted_languages = ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt', None]
@@ -127,27 +128,46 @@ result = whisperx.assign_word_speakers(diarize_segments, result)
 offset_seconds = None
 if hours is not None and minutes is not None:
     offset_seconds = timedelta(hours=int(hours), minutes=int(minutes)).total_seconds()
+
 with open('diarized_output.txt', 'w') as file:
+    if offset_seconds is not None:
+        running_start = timedelta(seconds=int(result['segments'][0]['start']) + offset_seconds)
+    else:
+        running_start = timedelta(seconds=int(result['segments'][0]['start']))
+    current_speaker = result["segments"][0]['speaker']
+    running_string = ""
+    last_end = running_start
+
     for segment in result["segments"]:
         # Extract the speaker, start time, end time and text from each segment
         speaker = segment['speaker']
-        if offset_seconds != None:
+        if offset_seconds is not None:
             start = timedelta(seconds=int(segment['start']) + offset_seconds)
             end = timedelta(seconds=int(segment['end']) + offset_seconds)
         else:
             start = timedelta(seconds=int(segment['start']))
             end = timedelta(seconds=int(segment['end']))
         text = segment['text']
-        # Write to the file in your specified format
-        if noTime == None:
-            file.write(f'[{start}-{end}] {speaker} -> {text}\n')
+
+        if current_speaker != speaker:
+            file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
+            running_start = start
+            running_string = text
+            current_speaker = speaker
         else:
-            file.write(f'{speaker} -> {text}\n')
+            running_string += " " + text
+            last_end = end
+    file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
+
 
 with open('base_output.txt', 'w') as file:
+    current_speaker = result["segments"][0]['speaker']
     for segment in result["segments"]:
         text = segment['text']
+        if segment['speaker'] != current_speaker:
+            file.write("\n")
         file.write(f"{text}\n")
+        current_speaker = segment['speaker']
 
 end_writing_time = time.time()
 print("--------end print--------")
