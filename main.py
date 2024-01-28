@@ -153,7 +153,7 @@ with open('diarized_output.txt', 'w') as file:
             running_string = text
             current_speaker = segment.get('speaker')
         else:
-            running_string += " " + text
+            running_string += "\n" + text
             last_end = end
 
 
