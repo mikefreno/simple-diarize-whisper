@@ -52,12 +52,12 @@ python main.py -a AUDIO_FILE
 | --- | --- | --- |
 | --force-cpu | -fc | Forces CPU usage, even if CUDA is available |
 | --huggingface | -hf | Provide access token from CLI instead of `.env` |
-| --batch | -b N | Sets batch size (N), can improve performance |
+| --batch | -b N | Sets batch size (N), Decrease if low on memory, defaults to 16. Only affects performance |
 | --low-gpu | -lg | Recovers GPU resources |
 | --number | -n N | For known exact speaker count (N) |
-| --min/--max | -mn N / -mx N | For known speaker count range, use both flags |
+| --min/--max | -mn N / -mx N | For known speaker count range, must use both flags |
 | --time | -t | Specifies a start time |
-| --aggressive-new-line | -anl | New lines at each same speaker chunk |
+| --aggressive-new-line | -anl | New lines (breaks) at each same speaker chunk instead of spaces |
 | --notime | -nt | Removes timestamps |
-| --model | -m | Specify model, affects performance & accuracy |
-| --language | -l | Specify language, skips detection step |
+| --model | -m | To use a model other than `large-v2`. Accepted values: `['tiny', 'base', 'small', 'small.en', 'medium', 'medium.en' 'large', 'large-v1', 'large-v2', 'large-v3', 'distil-medium.en', 'distil-small.en', 'distil-large-v2']`. Affects performance and accuracy |
+| --language | -l | Specify language to skip detection in file. Accepted values: `[en, fr, de, es, it, ja, zh nl, ul, pt]`. Skips detection step |
