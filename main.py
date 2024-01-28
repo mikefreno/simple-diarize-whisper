@@ -15,22 +15,22 @@ load_dotenv()
 start_time = time.time()
 parser = argparse.ArgumentParser(description="A script that transcribes audio")
 
+accepted_languages = ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt', None]
+accepted_models = ['tiny', 'base', 'small', 'small.en', 'medium', 'medium.en' 'large', 'large-v1', 'large-v2', 'large-v3', 'distil-medium.en', 'distil-small.en', 'distil-large-v2']
+
 parser.add_argument("-a", "--audio", help="'-a AUDIO_FILE' to denote file for transcription", required=True)
 parser.add_argument("-fc", "--force-cpu", action="store_true", help="-fc or --force-cpu to use cpu even if cuda is available")
 parser.add_argument("-b", "--batch", type=int, default=16, help="-b N sets batch size, decrease if low on mem, defaults to 16, increase if you have spare mem available")
 parser.add_argument("-n", "--number", type=int, default=None, help="-n or --number N if exact speaker count number is known")
 parser.add_argument("--min", type=int, default=None, help="--min N if speakers known in range, must use with --max flag")
 parser.add_argument("--max", type=int, default=None, help="--max N if speakers known in range, must use with --min flag")
-parser.add_argument("-m", "--model", default="large-v2", help="-m or --model to use a model other than large-v2, accepted vals ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']")
-parser.add_argument("-l", "--language", default=None, help="-l or --language to specify language to skip detection in file accepted vals [en, fr, de, es, it, ja, zh nl, ul, pt]")
+parser.add_argument("-m", "--model", default="large-v3", help=f"-m or --model to use a model other than large-v3, accepted vals {accepted_models}")
+parser.add_argument("-l", "--language", default=None, help=f"-l or --language to specify language to skip detection in file accepted vals {accepted_languages}")
 parser.add_argument("-hf", "--huggingface", default=None, help="-hf or --huggingface to provide access token instead of from loading from .env")
 parser.add_argument("-t", "--time", default=None, help="provides a start time to base time stamps on, accepts 24hr times in format 20:10")
 parser.add_argument("-nt", "--notime", action="store_true", default=None, help="removes timestamps")
-parser.add_argument("-cs", "--chunk-secondary", action="store_true", default=None, help="chunks the secondary(base) output into blocks per speaker")
 
 args = parser.parse_args()
-accepted_languages = ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt', None]
-accepted_models = ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']
 
 audio_file = args.audio
 defined_min_speakers = args.min
@@ -56,7 +56,7 @@ else:
     access_token = args.huggingface
 
 if model not in accepted_models:
-    sys.exit("Invalid model. Accepted values are ['tiny', 'base', 'small', 'medium', 'large', 'large-v2']")
+    sys.exit(f"Invalid model. Accepted values are {accepted_models}")
 
 if language not in accepted_languages:
     sys.exit("Invalid language. Accepted values are ['en', 'fr', 'de', 'es', 'it', 'ja', 'zh', 'nl', 'ul', 'pt']")
@@ -139,8 +139,6 @@ with open('diarized_output.txt', 'w') as file:
     last_end = running_start
 
     for segment in result["segments"]:
-        # Extract the speaker, start time, end time and text from each segment
-        speaker = segment['speaker']
         if offset_seconds is not None:
             start = timedelta(seconds=int(segment['start']) + offset_seconds)
             end = timedelta(seconds=int(segment['end']) + offset_seconds)
@@ -148,15 +146,17 @@ with open('diarized_output.txt', 'w') as file:
             start = timedelta(seconds=int(segment['start']))
             end = timedelta(seconds=int(segment['end']))
         text = segment['text']
-
-        if current_speaker != speaker:
+        
+        if current_speaker != segment.get('speaker') and segment.get('speaker') != None:
             file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
             running_start = start
             running_string = text
-            current_speaker = speaker
+            current_speaker = segment.get('speaker')
         else:
             running_string += " " + text
             last_end = end
+
+
     file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
 
 
@@ -164,10 +164,11 @@ with open('base_output.txt', 'w') as file:
     current_speaker = result["segments"][0]['speaker']
     for segment in result["segments"]:
         text = segment['text']
-        if segment['speaker'] != current_speaker:
+        if segment.get('speaker') != current_speaker and segment.get('speaker') != None:
             file.write("\n")
         file.write(f"{text}\n")
-        current_speaker = segment['speaker']
+        if segment.get('speaker'):
+            current_speaker = segment.get('speaker')
 
 end_writing_time = time.time()
 print("--------end print--------")
