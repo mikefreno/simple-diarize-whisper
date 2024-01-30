@@ -172,7 +172,7 @@ with open('base_output.txt', 'w') as file:
         text = segment['text']
         if segment.get('speaker') != current_speaker and segment.get('speaker') != None:
             file.write("\n")
-        file.write(f"{text}\n")
+        file.write(f"{text.strip()}\n")
         if segment.get('speaker'):
             current_speaker = segment.get('speaker')
 
