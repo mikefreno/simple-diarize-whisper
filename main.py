@@ -160,7 +160,7 @@ with open('diarized_output.txt', 'w') as file:
             running_string = text
             current_speaker = segment.get('speaker')
         else:
-            running_string += "\n" + text.strip()
+            running_string += ("\n" if aggressive_new_line else " ") + text.strip()
             last_end = end
 
     file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
