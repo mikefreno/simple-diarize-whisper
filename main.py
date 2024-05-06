@@ -138,7 +138,7 @@ offset_seconds = None
 if hours is not None and minutes is not None:
     offset_seconds = timedelta(hours=int(hours), minutes=int(minutes)).total_seconds()
 
-with open('diarized_output.txt', 'w') as file:
+with open(f'{base_name}_diarized.txt', 'w') as file:
     if offset_seconds is not None:
         running_start = timedelta(seconds=int(result['segments'][0]['start']) + offset_seconds)
     else:
