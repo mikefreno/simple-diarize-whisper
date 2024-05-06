@@ -65,6 +65,8 @@ if model not in accepted_models:
 if language not in accepted_languages:
     sys.exit(f"Invalid language. Accepted values are {accepted_languages}")
 
+base_name = os.path.splitext(os.path.basename(audio_file))[0]
+
 device, compute_type = ("cuda", "float16") if torch.cuda.is_available() and not forced_cpu else ("cpu", "int8")
 
 start_model_load = time.time()
@@ -166,7 +168,7 @@ with open('diarized_output.txt', 'w') as file:
     file.write(f'[{running_start}-{last_end}] {current_speaker} -> {running_string.strip()}\n')
 
 
-with open('base_output.txt', 'w') as file:
+with open(f'{base_name}_base.txt', 'w') as file:
     current_speaker = result["segments"][0]['speaker']
     for segment in result["segments"]:
         text = segment['text']
@@ -183,8 +185,8 @@ print("Total process time: %.2f seconds" % (end_writing_time- start_time))
 
 
 if platform.system() == 'Windows':
-    os.startfile('diarized_output.txt')
+    os.startfile(f'{base_name}_diarized.txt')
 elif platform.system() == "Darwin":
-    subprocess.call(('open', 'diarized_output.txt'))
+    subprocess.call(('open', f'{base_name}_diarized.txt'))
 elif platform.system() == "Linux":
-    subprocess.call(('xdg-open', 'diarized_output.txt'))
+    subprocess.call(('xdg-open', f'{base_name}_diarized.txt'))

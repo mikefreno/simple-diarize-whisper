@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ## Step 5 (optional): Replace faster_whisper utils.py (gives support for distil models -these are faster, highly recommend if running on cpu)
 ### unix
 ```bash
-cp utils.py /YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/utils.py
+cp utils.py YOUR_VENV_NAME/lib/PYTHON_VERSION/site-packages/faster_whisper/utils.py
 ```
 
 ### windows
